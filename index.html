@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Currency Table</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 5px;
+    }
+    th {
+      background-color: white;
+    }
+    tr:first-child th {
+      text-align: left;
+    }
+    tr:nth-child(-n+5) {
+      background-color: blue;    
+    }
+    tr[data-symbol="usdt"] {
+      background-color: green;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Symbol</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody id="currency-table">
+    </tbody>
+  </table>
+  <script>
+    fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1')
+      .then(response => response.json())
+      .then(data => {
+        const tbody = document.getElementById('currency-table');
+        data.forEach(coin => {
+          const tr = document.createElement('tr');
+          tr.setAttribute('data-symbol', coin.symbol);
+          tr.innerHTML = `
+            <td>${coin.id}</td>
+            <td>${coin.symbol}</td>
+            <td>${coin.name}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+  </script>
+</body>
+</html>
